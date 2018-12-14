@@ -32,12 +32,18 @@ public class MessageAppController : MonoBehaviour
 
     public void OpenMessageThread()
     {
-        contactsView.SetActive(false);
-        messagesView.SetActive(true);
+        if (EventSystem.current.currentSelectedGameObject.GetComponent<MessageContact>().GetContactName().Length > 0)
+        {
+            messagesView.SetActive(true);
+            EventSystem.current.currentSelectedGameObject.GetComponent<MessageThread>().CreateMessageUIObjects();
 
-        appName.SetActive(false);
-        currentContactName.SetActive(true);
-        currentContactName.GetComponent<Text>().text = EventSystem.current.currentSelectedGameObject.GetComponent<MessageContact>().GetContactName();
+            contactsView.SetActive(false);
+
+            appName.SetActive(false);
+            currentContactName.SetActive(true);
+            currentContactName.GetComponent<Text>().text = EventSystem.current.currentSelectedGameObject.GetComponent<MessageContact>().GetContactName();
+        }
+        
     }
 
     public void BackButtonPressed()
@@ -49,6 +55,9 @@ public class MessageAppController : MonoBehaviour
 
             appName.SetActive(true);
             currentContactName.SetActive(false);
+
+            // also delete message prefabs that were created in the messages scroll
+            // when the last thread was opened
         }
     }
 }
