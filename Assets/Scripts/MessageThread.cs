@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class MessageThread : MonoBehaviour
 {
-    public GameObject incomingMessagePrefab;
-    public GameObject outgoingMessagePrefab;
-
-    public GameObject messagesScrollContent;
-
     private Message[] messages;
+
+    //ideally this coordiates to the save file iD that saves the messages
+    private int threadID;
 
     void Start()
     {
@@ -22,38 +20,5 @@ public class MessageThread : MonoBehaviour
     }
 
     
-    void Update()
-    {
-        
-    }
-
-    public void CreateMessageUIObjects()
-    {
-        for (int d = 0; d < messagesScrollContent.transform.childCount; d++)
-        {
-            Destroy(messagesScrollContent.transform.GetChild(d).gameObject);
-        }
-
-
-
-        for (int i = 0; i < messages.Length; i++)
-        {
-            GameObject createdMessage;
-            //instantiate message prefab
-            if (messages[i].GetMessageType() == MessageType.INCOMING)
-            {
-                createdMessage = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
-            }
-            else
-            {
-                createdMessage = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
-            }
-
-            //set message prefab obj's MessageUI component's assocMessage
-            createdMessage.GetComponent<MessageUI>().SetAssociatedMessage(messages[i]);
-
-            //update ui
-            createdMessage.GetComponent<MessageUI>().UpdateMessageUI();
-        }
-    }
+    public Message[] GetThreadMessages() { return messages; }
 }

@@ -11,9 +11,16 @@ public class MessageAppController : MonoBehaviour
     private GameObject messagesView;
 
     private GameObject appName;
-    private GameObject currentContactName;
+    private GameObject currentContactNameText;
 
+    private GameObject previousContactObj;
+    private GameObject currentContactObj;
     private MessageContact currentlySelectedContact;
+    private MessageThread currentlySelectedMessageThread;
+
+    public GameObject messagesScrollContent;
+    public GameObject incomingMessagePrefab;
+    public GameObject outgoingMessagePrefab;
     
     void Start()
     {
@@ -21,7 +28,7 @@ public class MessageAppController : MonoBehaviour
         messagesView = transform.Find("Messages").gameObject;
 
         appName = transform.Find("AppHeader").Find("AppName").gameObject;
-        currentContactName = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
+        currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
     }
 
     
@@ -32,19 +39,60 @@ public class MessageAppController : MonoBehaviour
 
     public void OpenMessageThread()
     {
-        if (EventSystem.current.currentSelectedGameObject.GetComponent<MessageContact>().GetContactName().Length > 0)
+        if (currentContactObj) previousContactObj = currentContactObj;
+        currentContactObj = EventSystem.current.currentSelectedGameObject;
+
+        currentlySelectedContact = currentContactObj.GetComponent<MessageContact>();
+        currentlySelectedMessageThread = currentContactObj.GetComponent<MessageThread>();
+
+        if (currentlySelectedContact.GetContactName().Length > 0)
         {
             messagesView.SetActive(true);
-            EventSystem.current.currentSelectedGameObject.GetComponent<MessageThread>().CreateMessageUIObjects();
+            CreateMessageUIObjects();
 
             contactsView.SetActive(false);
 
             appName.SetActive(false);
-            currentContactName.SetActive(true);
-            currentContactName.GetComponent<Text>().text = EventSystem.current.currentSelectedGameObject.GetComponent<MessageContact>().GetContactName();
+            currentContactNameText.SetActive(true);
+            currentContactNameText.GetComponent<Text>().text = currentlySelectedContact.GetContactName();
         }
         
     }
+
+    public void CreateMessageUIObjects()
+    {
+        if (currentContactObj == previousContactObj) Debug.Log("opened same thread");
+
+        for (int d = 0; d < messagesScrollContent.transform.childCount; d++)
+        {
+            Destroy(messagesScrollContent.transform.GetChild(d).gameObject);
+        }
+
+
+        Message[] messagesToPopulate = currentlySelectedMessageThread.GetThreadMessages();
+        for (int i = 0; i < messagesToPopulate.Length; i++)
+        {
+            GameObject createdMessage;
+            //instantiate message prefab
+            if (messagesToPopulate[i].GetMessageType() == MessageType.INCOMING)
+            {
+                createdMessage = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
+            }
+            else
+            {
+                createdMessage = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
+            }
+
+            //set message prefab obj's MessageUI component's assocMessage
+            createdMessage.GetComponent<MessageUI>().SetAssociatedMessage(messagesToPopulate[i]);
+
+            //update ui
+            createdMessage.GetComponent<MessageUI>().UpdateMessageUI();
+        }
+    }
+
+
+
 
     public void BackButtonPressed()
     {
@@ -54,10 +102,7 @@ public class MessageAppController : MonoBehaviour
             messagesView.SetActive(false);
 
             appName.SetActive(true);
-            currentContactName.SetActive(false);
-
-            // also delete message prefabs that were created in the messages scroll
-            // when the last thread was opened
+            currentContactNameText.SetActive(false);
         }
     }
 }

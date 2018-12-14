@@ -17,11 +17,6 @@ public class MessageHeightSetter : MonoBehaviour
 
         messageObjectRect.sizeDelta = new Vector2(messageObjectRect.sizeDelta.x,    messageBackgroundRect.rect.height); 
 
-        Debug.Log(messageBackgroundRect.rect.height);
+        // Debug.Log(messageBackgroundRect.rect.height);
     } 
-
-    // void Update()
-    // {
-    //     Debug.Log(messageBackgroundRect.rect.height);
-    // }
 }
