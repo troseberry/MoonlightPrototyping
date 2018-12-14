@@ -56,12 +56,11 @@ public class MessageAppController : MonoBehaviour
             currentContactNameText.SetActive(true);
             currentContactNameText.GetComponent<Text>().text = currentlySelectedContact.GetContactName();
         }
-        
     }
 
     public void CreateMessageUIObjects()
     {
-        if (currentContactObj == previousContactObj) Debug.Log("opened same thread");
+        if (currentContactObj == previousContactObj) return;
 
         for (int d = 0; d < messagesScrollContent.transform.childCount; d++)
         {
