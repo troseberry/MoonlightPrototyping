@@ -8,11 +8,6 @@ public class MessageUI : MonoBehaviour
     public Text messageContent;
     private Message assocMessage;
 
-    void Start()
-    {
-        
-    }
-
     public void SetAssociatedMessage(Message message)
     {
         assocMessage = message;

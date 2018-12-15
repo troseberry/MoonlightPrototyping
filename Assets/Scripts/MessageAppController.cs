@@ -18,9 +18,14 @@ public class MessageAppController : MonoBehaviour
     private MessageContact currentlySelectedContact;
     private MessageThread currentlySelectedMessageThread;
 
+    public GameObject contactScrollContent;
+    public GameObject contactPrefab;
+
     public GameObject messagesScrollContent;
     public GameObject incomingMessagePrefab;
     public GameObject outgoingMessagePrefab;
+
+    
     
     void Start()
     {
@@ -91,8 +96,6 @@ public class MessageAppController : MonoBehaviour
     }
 
 
-
-
     public void BackButtonPressed()
     {
         if (messagesView.activeSelf)
@@ -103,5 +106,12 @@ public class MessageAppController : MonoBehaviour
             appName.SetActive(true);
             currentContactNameText.SetActive(false);
         }
+    }
+
+
+    // used when a new person "texts" the player
+    public void CreateNewContact()
+    {
+
     }
 }

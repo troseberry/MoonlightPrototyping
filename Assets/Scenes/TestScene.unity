@@ -3182,6 +3182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b706e888ad8284ca283497fcbd464fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  contactScrollContent: {fileID: 1076805054}
+  contactPrefab: {fileID: 2869551387261575292, guid: 8d634bc58db45455f930436a907be370,
+    type: 3}
   messagesScrollContent: {fileID: 2017475136}
   incomingMessagePrefab: {fileID: 3829812612095386825, guid: 57fcb3659bf8e4d6798aca83fc3edb6a,
     type: 3}
