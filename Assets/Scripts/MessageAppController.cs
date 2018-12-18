@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 
 public class MessageAppController : MonoBehaviour
 {
-    
+    public static MessageAppController Instance;
+
     private GameObject contactsView;
     private GameObject messagesView;
 
@@ -29,6 +30,8 @@ public class MessageAppController : MonoBehaviour
     
     void Start()
     {
+        Instance = this;
+
         contactsView = transform.Find("Contacts").gameObject;
         messagesView = transform.Find("Messages").gameObject;
 
@@ -110,8 +113,32 @@ public class MessageAppController : MonoBehaviour
 
 
     // used when a new person "texts" the player
-    public void CreateNewContact()
+    public void CreateNewContact(string name, string last, string date)
     {
+        GameObject createdContact = Instantiate(contactPrefab, contactScrollContent.transform);
+        createdContact.GetComponent<MessageContact>().InitContact(name, last, date);
+        createdContact.GetComponent<Button>().onClick.AddListener( () => OpenMessageThread());
+    }
 
+    public void CreateNewMessage(MessageType type, string messageContent, string date)
+    {
+        Message createdMessage = new Message(type, messageContent, date); 
+        GameObject createdMessageObj;
+
+        //instantiate message prefab
+        if (type == MessageType.INCOMING)
+        {
+            createdMessageObj = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
+        }
+        else
+        {
+            createdMessageObj = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
+        }
+
+        //set message prefab obj's MessageUI component's assocMessage
+        createdMessageObj.GetComponent<MessageUI>().SetAssociatedMessage(createdMessage);
+
+        //update ui
+        createdMessageObj.GetComponent<MessageUI>().UpdateMessageUI();
     }
 }

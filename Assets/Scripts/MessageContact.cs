@@ -27,6 +27,13 @@ public class MessageContact : MonoBehaviour
         dateTime = date;
     }
 
+    public void InitContact (string name, string last, string date)
+    {
+        contactName = name;
+        lastMessage = last;
+        dateTime = date;
+    }
+
     public void SetContactName(string name)
     {
         contactName = name;

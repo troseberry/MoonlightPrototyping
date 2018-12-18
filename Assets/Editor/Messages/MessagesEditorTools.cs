@@ -13,6 +13,8 @@ public class MessagesEditorTools : EditorWindow
     MessageType messageType;
     string messageContent;
     
+
+
     [MenuItem ("App Tools/Messages")]
     static void Init()
     {
@@ -27,6 +29,8 @@ public class MessagesEditorTools : EditorWindow
         switch(toolbarSelection)
         {
             case 0:
+                GUILayout.Label("Contact Tools", EditorStyles.boldLabel);
+
                 GUILayout.Label("Add New Contact", EditorStyles.boldLabel);
                 contactName = EditorGUILayout.TextField("Contact Name", contactName);
                 lastMessage = EditorGUILayout.TextField("Last Message", lastMessage);
@@ -34,23 +38,27 @@ public class MessagesEditorTools : EditorWindow
 
                 if (GUILayout.Button("Add New Contact"))
                 {
+                    MessageAppController.Instance.CreateNewContact(contactName, lastMessage, dateTime);
                     Debug.Log("added new contact");
                 }
 
                 break;
             case 1:
+                GUILayout.Label("Message Tools", EditorStyles.boldLabel);
+                
+
                 GUILayout.Label("Add New Message", EditorStyles.boldLabel);
                 messageType = (MessageType)EditorGUILayout.EnumPopup("Message Type", messageType);
                 messageContent = EditorGUILayout.TextField("Message Content", messageContent);
+                
 
                 if (GUILayout.Button("Add New Message"))
                 {
+                    MessageAppController.Instance.CreateNewMessage(messageType, messageContent, "n/a");
                     Debug.Log("added new message");
                 }
-
+                
                 break;
-        }
-
-        
+        } 
     }
 }
