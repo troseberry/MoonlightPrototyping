@@ -8,18 +8,15 @@ public class MessageContactUI : MonoBehaviour
     public Text contactName, lastMessage, dateTime;
     private MessageContact assocContact;
 
-    void Start()
+
+    public void SetAssociatedContact(MessageContact contact)
     {
-        assocContact =  GetComponent<MessageContact>();
+        assocContact = contact;
 
         contactName.text = assocContact.GetContactName();
         lastMessage.text = assocContact.GetLastMessage();
         dateTime.text = assocContact.GetDateTime();
     }
 
-    
-    void Update()
-    {
-        
-    }
+    public MessageContact GetAssociatedContact() { return assocContact; }
 }

@@ -396,9 +396,7 @@ GameObject:
   - component: {fileID: 2869551387261575293}
   - component: {fileID: 2869551387261575294}
   - component: {fileID: 2869551387261575288}
-  - component: {fileID: 2869551387261575295}
   - component: {fileID: 2869551387261575289}
-  - component: {fileID: 2869551387261575290}
   m_Layer: 5
   m_Name: Contact
   m_TagString: Untagged
@@ -503,21 +501,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &2869551387261575295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2869551387261575292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64605ee3f6ea84db09f6607c370a0886, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  contactName: 
-  lastMessage: 
-  dateTime: 
 --- !u!114 &2869551387261575289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,15 +516,3 @@ MonoBehaviour:
   contactName: {fileID: 2869551386109874472}
   lastMessage: {fileID: 2869551385673389457}
   dateTime: {fileID: 2869551386395449980}
---- !u!114 &2869551387261575290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2869551387261575292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 404adac37ea4042dfb450cfeccee9c06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

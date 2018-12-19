@@ -21,15 +21,17 @@ namespace MessageApp {
 
             try
             {
+                Debug.Log("Saving...");
                 BinaryFormatter formatter = new BinaryFormatter();
                 FileStream file = File.Create(Application.persistentDataPath + folderPath + masterFilePath);
 
                 SaveableData saveData = new SaveableData();
 
                 //---------------------------Setting Save Data-------------------------------------
-                saveData.savedContacts = new List<MessageContact>();
-                saveData.savedThreads = new List<MessageThread>();
+                saveData.savedContacts = MessageAppController.Instance.GetContactsList();
                 //---------------------------Done Setting Data-------------------------------------
+                
+                Debug.Log("Saved Here: " + Application.persistentDataPath + folderPath + masterFilePath);
 
                 formatter.Serialize(file, saveData);
                 file.Close();
@@ -37,6 +39,25 @@ namespace MessageApp {
             catch (Exception e)
             {
                 Debug.Log("Error: " + e.Message);
+            }
+        }
+
+
+        public static void LoadData()
+        {
+            if (File.Exists(Application.persistentDataPath + folderPath + masterFilePath))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream file = File.Open(Application.persistentDataPath + folderPath + masterFilePath, FileMode.Open);
+                SaveableData loadData = (SaveableData)formatter.Deserialize(file);
+                file.Close();
+
+                MessageAppController.Instance.SetContactsList(loadData.savedContacts);
+                // MessageAppController.Instance.SetThreadsList(loadData.savedThreads);
+            }
+            else
+            {
+                SaveData();
             }
         }
     }

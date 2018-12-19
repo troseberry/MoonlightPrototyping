@@ -9,8 +9,7 @@ namespace MessageApp
     public class SaveableData
     {
         public List<MessageContact> savedContacts;
-        public List<MessageThread> savedThreads;
-
+        // public List<MessageThread> savedThreads;
     }  
 }
 

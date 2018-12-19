@@ -16,6 +16,7 @@ public class MessageAppController : MonoBehaviour
 
     private GameObject previousContactObj;
     private GameObject currentContactObj;
+
     private MessageContact currentlySelectedContact;
     private MessageThread currentlySelectedMessageThread;
 
@@ -28,8 +29,8 @@ public class MessageAppController : MonoBehaviour
 
     
 
-    private List<MessageContact> contactsList;
-    private List<MessageThread> threadsList;
+    private List<MessageContact> contactsList = new List<MessageContact>();
+    // private List<MessageThread> threadsList;
 
     
     void Start()
@@ -41,12 +42,20 @@ public class MessageAppController : MonoBehaviour
 
         appName = transform.Find("AppHeader").Find("AppName").gameObject;
         currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
+
+        // contactsList = new List<MessageContact>();
+
+        InitContactsFromSave();
     }
 
     
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log("Contact Count: " + contactsList.Count);
+            MessageApp.SaveLoad.SaveData();
+        }
     }
 
     public void OpenMessageThread()
@@ -54,8 +63,8 @@ public class MessageAppController : MonoBehaviour
         if (currentContactObj) previousContactObj = currentContactObj;
         currentContactObj = EventSystem.current.currentSelectedGameObject;
 
-        currentlySelectedContact = currentContactObj.GetComponent<MessageContact>();
-        currentlySelectedMessageThread = currentContactObj.GetComponent<MessageThread>();
+        currentlySelectedContact = currentContactObj.GetComponent<MessageContactUI>().GetAssociatedContact();
+        currentlySelectedMessageThread = currentlySelectedContact.GetAssociatedMessageThread();
 
         if (currentlySelectedContact.GetContactName().Length > 0)
         {
@@ -82,8 +91,8 @@ public class MessageAppController : MonoBehaviour
 
         // instead of getting messages from messagethread component, this should eventually
         // look at the select contact obj's threadid and load messages from a file
-        Message[] messagesToPopulate = currentlySelectedMessageThread.GetThreadMessages();
-        for (int i = 0; i < messagesToPopulate.Length; i++)
+        List<Message> messagesToPopulate = currentlySelectedMessageThread.GetThreadMessages();
+        for (int i = 0; i < messagesToPopulate.Count; i++)
         {
             GameObject createdMessage;
             //instantiate message prefab
@@ -109,6 +118,9 @@ public class MessageAppController : MonoBehaviour
     {
         if (messagesView.activeSelf)
         {
+            //save messages
+
+
             contactsView.SetActive(true);
             messagesView.SetActive(false);
 
@@ -117,14 +129,38 @@ public class MessageAppController : MonoBehaviour
         }
     }
 
+    void InitContactsFromSave()
+    {
+        MessageApp.SaveLoad.LoadData();
+        Debug.Log("Saved Contacts Count: " + contactsList.Count);
+        if (contactsList.Count > 0)
+        {
+            for (int i = 0; i < contactsList.Count; i++)
+            {
+                GameObject createdContact = Instantiate(contactPrefab, contactScrollContent.transform);
+                createdContact.GetComponent<MessageContactUI>().SetAssociatedContact(contactsList[i]);
+                createdContact.GetComponent<Button>().onClick.AddListener( () => OpenMessageThread());
+            }
+        }
+    }
+
 
     // used when a new person "texts" the player
     public void CreateNewContact(string name, string last, string date)
     {
         GameObject createdContact = Instantiate(contactPrefab, contactScrollContent.transform);
-        createdContact.GetComponent<MessageContact>().InitContact(name, last, date);
+        createdContact.GetComponent<MessageContactUI>().SetAssociatedContact
+        (
+            new MessageContact(name, last, date)
+        );
+
         createdContact.GetComponent<Button>().onClick.AddListener( () => OpenMessageThread());
+
+        contactsList.Add(createdContact.GetComponent<MessageContactUI>().GetAssociatedContact());
     }
+
+
+
 
     public void CreateNewMessage(MessageType type, string messageContent, string date)
     {
@@ -146,6 +182,8 @@ public class MessageAppController : MonoBehaviour
 
         //update ui
         createdMessageObj.GetComponent<MessageUI>().UpdateMessageUI();
+
+        currentlySelectedMessageThread.AddMessage(createdMessage);
     }
 
 
@@ -158,11 +196,4 @@ public class MessageAppController : MonoBehaviour
     }
 
     public List<MessageContact> GetContactsList() { return contactsList; }
-
-    public void SetThreadsList(List<MessageThread> newThreads)
-    {
-        threadsList = newThreads;
-    }
-
-    public List<MessageThread> GetThreadsList() { return threadsList; }
 }

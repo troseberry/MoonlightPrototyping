@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum MessageType { INCOMING, OUTGOING }
 
+[Serializable]
 public class Message
 {
     private MessageType messageType;
