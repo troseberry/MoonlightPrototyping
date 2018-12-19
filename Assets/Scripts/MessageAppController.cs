@@ -71,7 +71,7 @@ public class MessageAppController : MonoBehaviour
             messagesView.SetActive(true);
             CreateMessageUIObjects();
 
-            messagesView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 0);
+            ScrollThreadToBottom();
 
             contactsView.SetActive(false);
 
@@ -114,7 +114,7 @@ public class MessageAppController : MonoBehaviour
             playerResponsesGroup.SetActive(false);
             messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 120f);
         }
-        messagesView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 0);
+        ScrollThreadToBottom();
     }
 
 
@@ -192,6 +192,13 @@ public class MessageAppController : MonoBehaviour
         createdMessageObj.GetComponent<MessageUI>().UpdateMessageUI();
 
         currentlySelectedMessageThread.AddMessage(createdMessage);
+
+        Invoke("ScrollThreadToBottom", 0.1f);
+    }
+
+    public void ScrollThreadToBottom()
+    {
+        messagesView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 0);
     }
     #endregion
 }

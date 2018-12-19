@@ -15,8 +15,6 @@ public class MessageHeightSetter : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         messageObjectRect = GetComponent<RectTransform>();
 
-        messageObjectRect.sizeDelta = new Vector2(messageObjectRect.sizeDelta.x,    messageBackgroundRect.rect.height); 
-
-        // Debug.Log(messageBackgroundRect.rect.height);
-    } 
+        messageObjectRect.sizeDelta = new Vector2(messageObjectRect.sizeDelta.x,    messageBackgroundRect.rect.height);
+    }
 }
