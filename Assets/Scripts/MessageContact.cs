@@ -7,7 +7,6 @@ using System;
 public class MessageContact
 {
     private string contactName, lastMessage, dateTime;
-    //have int that is the associated message thread's id
     private MessageThread associatedThread;
 
     
@@ -25,25 +24,7 @@ public class MessageContact
         lastMessage = last;
         dateTime = date;
 
-        associatedThread = new MessageThread(new Message(MessageType.INCOMING, last, "n/a"), -1);
-    }
-
-    public void InitContact (string name, string last, string date)
-    {
-        contactName = name;
-        lastMessage = last;
-        dateTime = date;
-
-        associatedThread = new MessageThread(new Message(MessageType.INCOMING, last, "n/a"), -1);
-    }
-
-    public void InitContact (MessageContact contact)
-    {
-        contactName = contact.contactName;
-        lastMessage = contact.lastMessage;
-        dateTime = contact.dateTime;
-
-        associatedThread = new MessageThread(new Message(MessageType.INCOMING, contact.lastMessage, "n/a"), -1);
+        associatedThread = new MessageThread(new Message(MessageType.INCOMING, last, "n/a"));
     }
 
     public void SetContactName(string name)

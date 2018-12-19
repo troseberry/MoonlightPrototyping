@@ -41,6 +41,7 @@ public class MessageAppController : MonoBehaviour
         appName = transform.Find("AppHeader").Find("AppName").gameObject;
         currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
 
+        // MessageApp.SaveLoad.DeleteData();
         InitContactsFromSave();
     }
 
@@ -66,6 +67,8 @@ public class MessageAppController : MonoBehaviour
             messagesView.SetActive(true);
             CreateMessageUIObjects();
 
+            messagesView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 0);
+
             contactsView.SetActive(false);
 
             appName.SetActive(false);
@@ -87,15 +90,9 @@ public class MessageAppController : MonoBehaviour
         List<Message> messagesToPopulate = currentlySelectedMessageThread.GetThreadMessages();
         for (int i = 0; i < messagesToPopulate.Count; i++)
         {
-            GameObject createdMessage;
-            if (messagesToPopulate[i].GetMessageType() == MessageType.INCOMING)
-            {
-                createdMessage = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
-            }
-            else
-            {
-                createdMessage = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
-            }
+            GameObject prefabToUse = messagesToPopulate[i].GetMessageType() == MessageType.INCOMING ? incomingMessagePrefab : outgoingMessagePrefab;
+
+            GameObject createdMessage = Instantiate(prefabToUse, messagesScrollContent.transform);
 
             createdMessage.GetComponent<MessageUI>().SetAssociatedMessage(messagesToPopulate[i]);
             createdMessage.GetComponent<MessageUI>().UpdateMessageUI();
@@ -151,17 +148,10 @@ public class MessageAppController : MonoBehaviour
 
     public void CreateNewMessage(MessageType type, string messageContent, string date)
     {
-        Message createdMessage = new Message(type, messageContent, date); 
-        GameObject createdMessageObj;
+        Message createdMessage = new Message(type, messageContent, date);
 
-        if (type == MessageType.INCOMING)
-        {
-            createdMessageObj = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
-        }
-        else
-        {
-            createdMessageObj = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
-        }
+        GameObject prefabToUse = (type == MessageType.INCOMING) ? incomingMessagePrefab : outgoingMessagePrefab;
+        GameObject createdMessageObj = Instantiate(prefabToUse, messagesScrollContent.transform); 
 
         createdMessageObj.GetComponent<MessageUI>().SetAssociatedMessage(createdMessage);
         createdMessageObj.GetComponent<MessageUI>().UpdateMessageUI();

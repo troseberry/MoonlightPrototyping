@@ -53,12 +53,19 @@ namespace MessageApp {
                 file.Close();
 
                 MessageAppController.Instance.SetContactsList(loadData.savedContacts);
-                // MessageAppController.Instance.SetThreadsList(loadData.savedThreads);
             }
             else
             {
                 SaveData();
             }
+        }
+
+        public static void DeleteData ()
+        {
+            // File.Delete(Application.persistentDataPath + folderPath + selectedSaveSlot + saveSlotStrings[selectedSaveSlot - 1]);
+
+            File.Delete(Application.persistentDataPath + folderPath + masterFilePath);
+            Debug.Log("Deleted Save");
         }
     }
 }
