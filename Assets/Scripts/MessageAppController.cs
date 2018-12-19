@@ -26,11 +26,9 @@ public class MessageAppController : MonoBehaviour
     public GameObject messagesScrollContent;
     public GameObject incomingMessagePrefab;
     public GameObject outgoingMessagePrefab;
-
     
 
     private List<MessageContact> contactsList = new List<MessageContact>();
-    // private List<MessageThread> threadsList;
 
     
     void Start()
@@ -43,8 +41,6 @@ public class MessageAppController : MonoBehaviour
         appName = transform.Find("AppHeader").Find("AppName").gameObject;
         currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
 
-        // contactsList = new List<MessageContact>();
-
         InitContactsFromSave();
     }
 
@@ -53,7 +49,6 @@ public class MessageAppController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Debug.Log("Contact Count: " + contactsList.Count);
             MessageApp.SaveLoad.SaveData();
         }
     }
@@ -89,13 +84,10 @@ public class MessageAppController : MonoBehaviour
         }
 
 
-        // instead of getting messages from messagethread component, this should eventually
-        // look at the select contact obj's threadid and load messages from a file
         List<Message> messagesToPopulate = currentlySelectedMessageThread.GetThreadMessages();
         for (int i = 0; i < messagesToPopulate.Count; i++)
         {
             GameObject createdMessage;
-            //instantiate message prefab
             if (messagesToPopulate[i].GetMessageType() == MessageType.INCOMING)
             {
                 createdMessage = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
@@ -105,10 +97,7 @@ public class MessageAppController : MonoBehaviour
                 createdMessage = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
             }
 
-            //set message prefab obj's MessageUI component's assocMessage
             createdMessage.GetComponent<MessageUI>().SetAssociatedMessage(messagesToPopulate[i]);
-
-            //update ui
             createdMessage.GetComponent<MessageUI>().UpdateMessageUI();
         }
     }
@@ -118,8 +107,7 @@ public class MessageAppController : MonoBehaviour
     {
         if (messagesView.activeSelf)
         {
-            //save messages
-
+            currentlySelectedContact.SetAssociatedMessageThread(currentlySelectedMessageThread);
 
             contactsView.SetActive(true);
             messagesView.SetActive(false);
@@ -132,7 +120,6 @@ public class MessageAppController : MonoBehaviour
     void InitContactsFromSave()
     {
         MessageApp.SaveLoad.LoadData();
-        Debug.Log("Saved Contacts Count: " + contactsList.Count);
         if (contactsList.Count > 0)
         {
             for (int i = 0; i < contactsList.Count; i++)
@@ -167,7 +154,6 @@ public class MessageAppController : MonoBehaviour
         Message createdMessage = new Message(type, messageContent, date); 
         GameObject createdMessageObj;
 
-        //instantiate message prefab
         if (type == MessageType.INCOMING)
         {
             createdMessageObj = Instantiate(incomingMessagePrefab, messagesScrollContent.transform);
@@ -177,10 +163,7 @@ public class MessageAppController : MonoBehaviour
             createdMessageObj = Instantiate(outgoingMessagePrefab, messagesScrollContent.transform);
         }
 
-        //set message prefab obj's MessageUI component's assocMessage
         createdMessageObj.GetComponent<MessageUI>().SetAssociatedMessage(createdMessage);
-
-        //update ui
         createdMessageObj.GetComponent<MessageUI>().UpdateMessageUI();
 
         currentlySelectedMessageThread.AddMessage(createdMessage);

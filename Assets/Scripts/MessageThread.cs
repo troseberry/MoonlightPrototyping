@@ -48,6 +48,6 @@ public class MessageThread
 
     public void AddMessage(Message toAdd)
     {
-
+        messages.Add(toAdd);
     }
 }
