@@ -27,6 +27,10 @@ public class MessageAppController : MonoBehaviour
     public GameObject outgoingMessagePrefab;
 
     
+
+    private List<MessageContact> contactsList;
+    private List<MessageThread> threadsList;
+
     
     void Start()
     {
@@ -76,6 +80,8 @@ public class MessageAppController : MonoBehaviour
         }
 
 
+        // instead of getting messages from messagethread component, this should eventually
+        // look at the select contact obj's threadid and load messages from a file
         Message[] messagesToPopulate = currentlySelectedMessageThread.GetThreadMessages();
         for (int i = 0; i < messagesToPopulate.Length; i++)
         {
@@ -141,4 +147,22 @@ public class MessageAppController : MonoBehaviour
         //update ui
         createdMessageObj.GetComponent<MessageUI>().UpdateMessageUI();
     }
+
+
+
+
+
+    public void SetContactsList(List<MessageContact> newContacts)
+    {
+        contactsList = newContacts;
+    }
+
+    public List<MessageContact> GetContactsList() { return contactsList; }
+
+    public void SetThreadsList(List<MessageThread> newThreads)
+    {
+        threadsList = newThreads;
+    }
+
+    public List<MessageThread> GetThreadsList() { return threadsList; }
 }

@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class MessageContact : MonoBehaviour
 {
-    // [SerializeField]
     public string contactName, lastMessage, dateTime;
-    // private MessageContact thisContact;
+    //have int that is the associated message thread's id
 
-    void Start()
-    {
-        // thisContact = new MessageContact();
-    }
+    
 
     public MessageContact()
     {
