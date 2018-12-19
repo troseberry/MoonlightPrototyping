@@ -10,6 +10,7 @@ public class MessageAppController : MonoBehaviour
 
     private GameObject contactsView;
     private GameObject messagesView;
+    private GameObject addContactButton;
 
     private GameObject appName;
     private GameObject currentContactNameText;
@@ -34,6 +35,9 @@ public class MessageAppController : MonoBehaviour
     public GameObject playerResponsesGroup;
 
 
+    private string[] randomFirstNames = {" Michael", "Jennifer", "Christopher", "Amanda", "Jason", "Jessica", "David", "Melissa", "James", "Sarah", "Matthew", "Heather", "Joshua", "Nicole", "John", "Amy", "Robert", "Elizabeth", "Joseph", "Michelle"};
+
+    private string[] randomLastNames = {"Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor"};
     
     void Start()
     {
@@ -44,6 +48,8 @@ public class MessageAppController : MonoBehaviour
 
         appName = transform.Find("AppHeader").Find("AppName").gameObject;
         currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
+
+        addContactButton = transform.Find("AppHeader").Find("AddContactButton").gameObject;
 
         // MessageApp.SaveLoad.DeleteData();
         InitContactsFromSave();
@@ -78,6 +84,8 @@ public class MessageAppController : MonoBehaviour
             appName.SetActive(false);
             currentContactNameText.SetActive(true);
             currentContactNameText.GetComponent<Text>().text = currentlySelectedContact.GetContactName();
+
+            addContactButton.SetActive(false);
         }
     }
 
@@ -99,6 +107,8 @@ public class MessageAppController : MonoBehaviour
 
             appName.SetActive(true);
             currentContactNameText.SetActive(false);
+
+            addContactButton.SetActive(true);
         }
     }
 
@@ -155,6 +165,19 @@ public class MessageAppController : MonoBehaviour
     }
 
     public List<MessageContact> GetContactsList() { return contactsList; }
+
+    public void GenerateRandomContact()
+    {
+        int randomFirst = Random.Range(0, randomFirstNames.Length);
+        int randomLast = Random.Range(0, randomLastNames.Length);
+
+        CreateNewContact(
+            randomFirstNames[randomFirst] + " " + randomLastNames[randomLast],
+            "received message from " + randomFirstNames[randomFirst] + " " + randomLastNames[randomLast],
+            "n/a"
+        );
+    }
+    
     #endregion
 
 
