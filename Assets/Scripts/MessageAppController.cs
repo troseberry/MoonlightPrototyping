@@ -117,12 +117,20 @@ public class MessageAppController : MonoBehaviour
         if (!playerResponsesGroup.activeSelf)
         {
             playerResponsesGroup.SetActive(true);
-            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 525f);
+
+            //for scene w/physical phone UI
+            //messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 525f);
+            //for scene w/no physical phone UI
+            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 620f);
         }
         else
         {
             playerResponsesGroup.SetActive(false);
-            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 120f);
+
+            //for scene w/physical phone UI
+            // messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 120f);
+            //for scene w/no physical phone UI
+            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 125f);
         }
         ScrollThreadToBottom();
     }
