@@ -4,16 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class MessageAppController : MonoBehaviour
+public class MessageAppController : AppController
 {
     public static MessageAppController Instance;
 
-    private GameObject contactsView;
-    private GameObject messagesView;
-    private GameObject addContactButton;
+    public GameObject contactsView;
+    public GameObject messagesView;
+    public GameObject addContactButton;
 
-    private GameObject appName;
-    private GameObject currentContactNameText;
+    public GameObject appName;
+    public GameObject currentContactNameText;
 
     private GameObject previousContactObj;
     private GameObject currentContactObj;
@@ -30,7 +30,6 @@ public class MessageAppController : MonoBehaviour
 
     private List<MessageContact> contactsList = new List<MessageContact>();
 
-
     public RectTransform messagesScroll;
     public GameObject playerResponsesGroup;
 
@@ -43,54 +42,42 @@ public class MessageAppController : MonoBehaviour
     {
         Instance = this;
 
-        contactsView = transform.Find("Contacts").gameObject;
-        messagesView = transform.Find("Messages").gameObject;
+        // contactsView = transform.Find("Contacts").gameObject;
+        // messagesView = transform.Find("Messages").gameObject;
 
-        appName = transform.Find("AppHeader").Find("AppName").gameObject;
-        currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
+        // appName = transform.Find("AppHeader").Find("AppName").gameObject;
+        // currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
 
-        addContactButton = transform.Find("AppHeader").Find("AddContactButton").gameObject;
+        // addContactButton = transform.Find("AppHeader").Find("AddContactButton").gameObject;
 
         // MessageApp.SaveLoad.DeleteData();
         InitContactsFromSave();
     }
 
-    
-    void Update()
+    public override void OpenApp()
     {
-        // if (Input.GetKeyDown(KeyCode.P))
-        // {
-        //     MessageApp.SaveLoad.SaveData();
-        // }
+        contactsView.SetActive(true);
+        messagesView.SetActive(false);
+
+        appName.SetActive(true);
+        currentContactNameText.SetActive(false);
+
+        addContactButton.SetActive(true);
+
+        contactsView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 1);
+
+        previousContactObj = null;
+        currentContactObj = null;
+        currentlySelectedContact = null;
+        currentlySelectedMessageThread = null;
     }
 
-    public void OpenMessageThread()
+    public override void CloseApp()
     {
-        if (currentContactObj) previousContactObj = currentContactObj;
-        currentContactObj = EventSystem.current.currentSelectedGameObject;
-
-        currentlySelectedContact = currentContactObj.GetComponent<MessageContactUI>().GetAssociatedContact();
-        currentlySelectedMessageThread = currentlySelectedContact.GetAssociatedMessageThread();
-
-        if (currentlySelectedContact.GetContactName().Length > 0)
-        {
-            messagesView.SetActive(true);
-            CreateMessageUIObjects();
-
-            ScrollThreadToBottom();
-
-            contactsView.SetActive(false);
-
-            appName.SetActive(false);
-            currentContactNameText.SetActive(true);
-            currentContactNameText.GetComponent<Text>().text = currentlySelectedContact.GetContactName();
-
-            addContactButton.SetActive(false);
-        }
+        gameObject.SetActive(false);
     }
 
-
-    public void BackButtonPressed()
+    public override void BackButtonPressed()
     {
 
         if (playerResponsesGroup.activeSelf)
@@ -110,7 +97,15 @@ public class MessageAppController : MonoBehaviour
 
             addContactButton.SetActive(true);
         }
+        else
+        {
+            CloseApp();
+        }
     }
+
+    
+
+    
 
     public void TogglePlayerResponses()
     {
@@ -188,8 +183,32 @@ public class MessageAppController : MonoBehaviour
     
     #endregion
 
-
     #region MESSAGE METHODS
+    public void OpenMessageThread()
+    {
+        if (currentContactObj) previousContactObj = currentContactObj;
+        currentContactObj = EventSystem.current.currentSelectedGameObject;
+
+        currentlySelectedContact = currentContactObj.GetComponent<MessageContactUI>().GetAssociatedContact();
+        currentlySelectedMessageThread = currentlySelectedContact.GetAssociatedMessageThread();
+
+        if (currentlySelectedContact.GetContactName().Length > 0)
+        {
+            messagesView.SetActive(true);
+            CreateMessageUIObjects();
+
+            ScrollThreadToBottom();
+
+            contactsView.SetActive(false);
+
+            appName.SetActive(false);
+            currentContactNameText.SetActive(true);
+            currentContactNameText.GetComponent<Text>().text = currentlySelectedContact.GetContactName();
+
+            addContactButton.SetActive(false);
+        }
+    }
+
     public void CreateMessageUIObjects()
     {
         if (currentContactObj == previousContactObj) return;
