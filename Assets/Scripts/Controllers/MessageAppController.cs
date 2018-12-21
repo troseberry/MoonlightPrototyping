@@ -55,6 +55,8 @@ public class MessageAppController : AppController
 
         addContactButton.SetActive(true);
 
+        playerResponsesGroup.SetActive(false);
+
         Invoke("ScrollContactsToTop", 0.1f);
 
         previousContactObj = null;
@@ -111,6 +113,15 @@ public class MessageAppController : AppController
             messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 275f);
         }
         ScrollThreadToBottom();
+    }
+
+    public void ClearContacts()
+    {
+        contactsList.Clear();
+        for (int i = 0; i < contactScrollContent.transform.childCount; i++)
+        {
+            Destroy(contactScrollContent.transform.GetChild(i).gameObject);
+        }
     }
 
 

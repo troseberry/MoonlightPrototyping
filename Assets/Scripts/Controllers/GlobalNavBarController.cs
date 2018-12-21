@@ -15,7 +15,7 @@ public class GlobalNavBarController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Current App: " + currentOpenAppController);
+        // Debug.Log("Current App: " + currentOpenAppController);
     }
     
     public void SetCurrentOpenApp(AppController newApp)
