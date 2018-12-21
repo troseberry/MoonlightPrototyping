@@ -64,7 +64,7 @@ public class MessageAppController : AppController
 
         addContactButton.SetActive(true);
 
-        contactsView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 1);
+        Invoke("ScrollContactsToTop", 0.1f);
 
         previousContactObj = null;
         currentContactObj = null;
@@ -181,6 +181,10 @@ public class MessageAppController : AppController
         );
     }
     
+    void ScrollContactsToTop()
+    {
+        contactsView.GetComponentInChildren<ScrollRect>().normalizedPosition = new Vector2(0, 1);
+    }
     #endregion
 
     #region MESSAGE METHODS
