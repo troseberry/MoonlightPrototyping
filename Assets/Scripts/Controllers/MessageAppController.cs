@@ -42,15 +42,6 @@ public class MessageAppController : AppController
     {
         Instance = this;
 
-        // contactsView = transform.Find("Contacts").gameObject;
-        // messagesView = transform.Find("Messages").gameObject;
-
-        // appName = transform.Find("AppHeader").Find("AppName").gameObject;
-        // currentContactNameText = transform.Find("AppHeader").Find("CurrentContactName").gameObject;
-
-        // addContactButton = transform.Find("AppHeader").Find("AddContactButton").gameObject;
-
-        // MessageApp.SaveLoad.DeleteData();
         InitContactsFromSave();
     }
 
@@ -112,20 +103,12 @@ public class MessageAppController : AppController
         if (!playerResponsesGroup.activeSelf)
         {
             playerResponsesGroup.SetActive(true);
-
-            //for scene w/physical phone UI
-            //messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 525f);
-            //for scene w/no physical phone UI
-            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 620f);
+            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 770f);
         }
         else
         {
             playerResponsesGroup.SetActive(false);
-
-            //for scene w/physical phone UI
-            // messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 120f);
-            //for scene w/no physical phone UI
-            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 125f);
+            messagesScroll.offsetMin = new Vector2(messagesScroll.offsetMin.x, 275f);
         }
         ScrollThreadToBottom();
     }
