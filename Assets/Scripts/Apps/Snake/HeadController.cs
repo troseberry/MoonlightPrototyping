@@ -14,6 +14,8 @@ public class HeadController : MonoBehaviour
 
     private bool justAte = false;
 
+    public Transform headDeco;
+
     void Start()
     {
         
@@ -28,6 +30,23 @@ public class HeadController : MonoBehaviour
     public void SetMoveDirection(Vector2 dir)
     {
         moveDirection = dir;
+
+        if (moveDirection ==  Vector2.right)
+        {
+            headDeco.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+        }
+        else if (moveDirection ==  Vector2.up)
+        {
+            headDeco.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+        }
+        else if (moveDirection ==  Vector2.left)
+        {
+            headDeco.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+        }
+        else if (moveDirection ==  Vector2.down)
+        {
+            headDeco.rotation = Quaternion.Euler(new Vector3(0, 0, 270));
+        }
     }
 
     public void InitiateMove()
@@ -65,7 +84,7 @@ public class HeadController : MonoBehaviour
             }
 
             SnakeBehavior.Instance.EnableInput();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.4f);
         }
     }
 
@@ -73,20 +92,20 @@ public class HeadController : MonoBehaviour
     {
         if (other.tag.Equals("SnakeFood"))
         {
-            Debug.Log("Hit Food");
+            // Debug.Log("Hit Food");
             justAte = true;
             Destroy(other.gameObject);
             FoodSpawner.Instance.SpawnFood();
         }
         else if (other.tag.Equals("SnakeBoundary"))
         {
-            Debug.Log("Hit Grid Boundary");
+            // Debug.Log("Hit Grid Boundary");
             stopMoving = true;
             SnakeAppController.Instance.ToggleGameOverMenu();
         }
         else if (other.tag.Equals("SnakeBody"))
         {
-            Debug.Log("Hit snake body");
+            // Debug.Log("Hit snake body");
             stopMoving = true;
             SnakeAppController.Instance.ToggleGameOverMenu();
         }

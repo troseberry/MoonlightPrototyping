@@ -18,10 +18,12 @@ public class SnakeBehavior : MonoBehaviour
 
     private bool canInput = true;
 
+    public SwipeDetection swipeArea;
     
     void Start()
     {
-        Instance = this;   
+        Instance = this; 
+        swipeArea = GameObject.Find("SnakeSwipeArea").GetComponent<SwipeDetection>();  
     }
 
     
@@ -29,60 +31,61 @@ public class SnakeBehavior : MonoBehaviour
     {
         if (!hasStarted)
         {
-            if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+            switch (swipeArea.GetCurrentSwipeDirection())
             {
-                if (Input.GetAxis("Horizontal") < 0) return;
-                currentHeadDirection = Vector2.right;
-                headSegment.InitiateMove();
-                headSegment.SetMoveDirection(currentHeadDirection);
-                
-                hasStarted = true;
+                case SwipeDirection.RIGHT:
+                    currentHeadDirection = Vector2.right;
+                    headSegment.InitiateMove();
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    
+                    hasStarted = true;
+                    break;
+                case SwipeDirection.UP:
+                    currentHeadDirection = Vector2.up;
+                    headSegment.InitiateMove();
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    
+                    hasStarted = true;
+                    break;
+                case SwipeDirection.DOWN:
+                    currentHeadDirection = Vector2.down;
+                    headSegment.InitiateMove();
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    
+                    hasStarted = true;
+                    break;
             }
         }
 
         if (canInput)
         {
-            if (Input.GetAxis("Horizontal") != 0)
+            switch (swipeArea.GetCurrentSwipeDirection())
             {
-                if (currentHeadDirection == Vector2.right || currentHeadDirection == Vector2.left) return;
-
-                if (Input.GetAxis("Horizontal") > 0)
-                {   // Debug.Log("Right");
+                case SwipeDirection.RIGHT:
+                    if (currentHeadDirection == Vector2.right || currentHeadDirection == Vector2.left) break;
                     currentHeadDirection = Vector2.right;
                     headSegment.SetMoveDirection(currentHeadDirection);
                     canInput = false;
-                }
-                
-                if (Input.GetAxis("Horizontal") < 0)
-                {   // Debug.Log("Left");
+                    break;
+                case SwipeDirection.LEFT:
+                    if (currentHeadDirection == Vector2.right || currentHeadDirection == Vector2.left) break;
                     currentHeadDirection = Vector2.left;
                     headSegment.SetMoveDirection(currentHeadDirection);
                     canInput = false;
-                }
-            }
-            else if(Input.GetAxis("Vertical") != 0)
-            {
-                if (currentHeadDirection == Vector2.up || currentHeadDirection == Vector2.down) return;
-
-                if (Input.GetAxis("Vertical") > 0)
-                {   // Debug.Log("Up");
+                    break;
+                case SwipeDirection.UP:
+                    if (currentHeadDirection == Vector2.up || currentHeadDirection == Vector2.down) break;
                     currentHeadDirection = Vector2.up;
                     headSegment.SetMoveDirection(currentHeadDirection);
                     canInput = false;
-                }
-
-                if (Input.GetAxis("Vertical") < 0)
-                {   // Debug.Log("Down");
+                    break;
+                case SwipeDirection.DOWN:
+                    if (currentHeadDirection == Vector2.up || currentHeadDirection == Vector2.down) break;
                     currentHeadDirection = Vector2.down;
                     headSegment.SetMoveDirection(currentHeadDirection);
                     canInput = false;
-                }
+                    break;
             }
-        }
-    
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            headSegment.EatFood();
         }
     }
 
