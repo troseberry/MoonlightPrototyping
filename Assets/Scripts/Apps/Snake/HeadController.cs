@@ -5,7 +5,6 @@ using UnityEngine;
 public class HeadController : MonoBehaviour
 {
     private Vector2 moveDirection;
-    public bool isHeadSegment;
 
     public float moveDistance;
 
@@ -52,20 +51,20 @@ public class HeadController : MonoBehaviour
 
         while (!stopMoving)
         {
-            SnakeController.Instance.SetLastHeadPosition(transform.position);
+            SnakeBehavior.Instance.SetLastHeadPosition(transform.position);
             transform.Translate(moveDirection * moveDistance);
 
             if (!justAte)
             {
-                SnakeController.Instance.MoveTailSegment();
+                SnakeBehavior.Instance.MoveTailSegment();
             }
             else
             {
-                SnakeController.Instance.AddBodySegment();
+                SnakeBehavior.Instance.AddBodySegment();
                 justAte = false;
             }
 
-            SnakeController.Instance.EnableInput();
+            SnakeBehavior.Instance.EnableInput();
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -78,6 +77,18 @@ public class HeadController : MonoBehaviour
             justAte = true;
             Destroy(other.gameObject);
             FoodSpawner.Instance.SpawnFood();
+        }
+        else if (other.tag.Equals("SnakeBoundary"))
+        {
+            Debug.Log("Hit Grid Boundary");
+            stopMoving = true;
+            SnakeAppController.Instance.ToggleGameOverMenu();
+        }
+        else if (other.tag.Equals("SnakeBody"))
+        {
+            Debug.Log("Hit snake body");
+            stopMoving = true;
+            SnakeAppController.Instance.ToggleGameOverMenu();
         }
     }
 }

@@ -18,12 +18,6 @@ public class FoodSpawner : MonoBehaviour
         Instance = this;
     }
 
-    
-    void Update()
-    {
-        
-    }
-
     public void SpawnFood()
     {
         float xPos = Random.Range(gridWidthMin, gridWidthMax);
@@ -33,7 +27,7 @@ public class FoodSpawner : MonoBehaviour
         yPos = (Mathf.Round(yPos * 2)) / 2;
 
         Vector2 spawnPos = new Vector2 (xPos, yPos);
-        Debug.Log("Food Spawn: " + spawnPos);
+        // Debug.Log("Food Spawn: " + spawnPos);
 
         Instantiate(foodPrefab, spawnPos, Quaternion.identity);
     }

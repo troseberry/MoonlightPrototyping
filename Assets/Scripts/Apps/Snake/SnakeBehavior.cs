@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeController : MonoBehaviour
+public class SnakeBehavior : MonoBehaviour
 {
-    public static SnakeController Instance;
+    public static SnakeBehavior Instance;
 
     private bool hasStarted = false;
 
-    public Vector2 currentHeadDirection = Vector2.zero;
+    private Vector2 currentHeadDirection = Vector2.zero;
 
     public GameObject bodySegmentPrefab;
 
@@ -31,6 +31,7 @@ public class SnakeController : MonoBehaviour
         {
             if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
             {
+                if (Input.GetAxis("Horizontal") < 0) return;
                 currentHeadDirection = Vector2.right;
                 headSegment.InitiateMove();
                 headSegment.SetMoveDirection(currentHeadDirection);

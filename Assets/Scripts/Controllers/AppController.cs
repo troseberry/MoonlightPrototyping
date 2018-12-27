@@ -12,11 +12,11 @@ public class AppController : MonoBehaviour
 
     public virtual void BackButtonPressed()
     {
-
+        CloseApp();
     }
 
     public virtual void CloseApp()
     {
-        
+        gameObject.SetActive(false);
     }
 }
