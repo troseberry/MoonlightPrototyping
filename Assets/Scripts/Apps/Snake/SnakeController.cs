@@ -6,17 +6,17 @@ public class SnakeController : MonoBehaviour
 {
     public static SnakeController Instance;
 
-    public Vector2 currentHeadDirection = Vector2.zero;
-    private Vector2 currentTailDirection;
-
-    public TileDirectionChanger currentHeadTile;
-
-    public int totalSegmentCount;
-
     private bool hasStarted = false;
-    public SegmentController[] startingSegments;
 
-    public TileDirectionChanger[] allTiles;
+    public Vector2 currentHeadDirection = Vector2.zero;
+
+    public GameObject bodySegmentPrefab;
+
+    public HeadController headSegment;
+    private Vector2 lastHeadPosition;
+    public List<BodyController> bodySegments;
+
+    private bool canInput = true;
 
     
     void Start()
@@ -31,108 +31,86 @@ public class SnakeController : MonoBehaviour
         {
             if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
             {
-                foreach(SegmentController seg in startingSegments)
-                {
-                    currentHeadDirection = Vector2.right;
-                    seg.SetMoveDirection(Vector2.right);
-                }
+                currentHeadDirection = Vector2.right;
+                headSegment.InitiateMove();
+                headSegment.SetMoveDirection(currentHeadDirection);
+                
                 hasStarted = true;
             }
         }
 
-        if (Input.GetAxis("Horizontal") != 0)
+        if (canInput)
         {
-            if (currentHeadDirection == Vector2.right || currentHeadDirection == Vector2.left) return;
-
-            if (Input.GetAxis("Horizontal") > 0)
+            if (Input.GetAxis("Horizontal") != 0)
             {
-                currentHeadDirection = Vector2.right;
-                // startingSegments[0].SetMoveDirection(currentHeadDirection);
-                currentHeadTile.ActivateDirectionChanging(Vector2.right);
-                Debug.Log("Right");
+                if (currentHeadDirection == Vector2.right || currentHeadDirection == Vector2.left) return;
+
+                if (Input.GetAxis("Horizontal") > 0)
+                {   // Debug.Log("Right");
+                    currentHeadDirection = Vector2.right;
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    canInput = false;
+                }
+                
+                if (Input.GetAxis("Horizontal") < 0)
+                {   // Debug.Log("Left");
+                    currentHeadDirection = Vector2.left;
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    canInput = false;
+                }
             }
-            
-            if (Input.GetAxis("Horizontal") < 0)
+            else if(Input.GetAxis("Vertical") != 0)
             {
-                currentHeadDirection = Vector2.left;
-                // startingSegments[0].SetMoveDirection(currentHeadDirection);
-                currentHeadTile.ActivateDirectionChanging(Vector2.left);
-                Debug.Log("Left");
+                if (currentHeadDirection == Vector2.up || currentHeadDirection == Vector2.down) return;
+
+                if (Input.GetAxis("Vertical") > 0)
+                {   // Debug.Log("Up");
+                    currentHeadDirection = Vector2.up;
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    canInput = false;
+                }
+
+                if (Input.GetAxis("Vertical") < 0)
+                {   // Debug.Log("Down");
+                    currentHeadDirection = Vector2.down;
+                    headSegment.SetMoveDirection(currentHeadDirection);
+                    canInput = false;
+                }
             }
         }
-        else if(Input.GetAxis("Vertical") != 0)
+    
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (currentHeadDirection == Vector2.up || currentHeadDirection == Vector2.down) return;
-
-            if (Input.GetAxis("Vertical") > 0)
-            {
-                currentHeadDirection = Vector2.up;
-                // startingSegments[0].SetMoveDirection(currentHeadDirection);
-                currentHeadTile.ActivateDirectionChanging(Vector2.up);
-                Debug.Log("Up");
-            }
-
-            if (Input.GetAxis("Vertical") < 0)
-            {
-                currentHeadDirection = Vector2.down;
-                // startingSegments[0].SetMoveDirection(currentHeadDirection);
-                currentHeadTile.ActivateDirectionChanging(Vector2.down);
-                Debug.Log("Down");
-            }
+            headSegment.EatFood();
         }
     }
 
-    public void SetSegmentPositions()
+
+    public void SetLastHeadPosition(Vector2 pos)
     {
-        startingSegments[1].transform.position = startingSegments[0].previousTile.transform.position;
-        startingSegments[2].transform.position = startingSegments[1].previousTile.transform.position;
+        lastHeadPosition = pos;
     }
 
-    public int GetTotalSegmentCount() { return totalSegmentCount; }
-
-    public void SetCurrentHeadTile(TileDirectionChanger headTile)
+    public void MoveTailSegment()
     {
-        currentHeadTile = headTile;
+        BodyController tail = bodySegments[bodySegments.Count - 1];
+        tail.SetPosition(lastHeadPosition);
+
+        bodySegments.RemoveAt(bodySegments.Count - 1);
+        bodySegments.Insert(0, tail);
     }
 
-    public SegmentController GetHeadSegment()
+    public void AddBodySegment()
     {
-        return startingSegments[0];
+        GameObject seg = Instantiate(bodySegmentPrefab, transform);
+        seg.GetComponent<BodyController>().SetPosition(lastHeadPosition);
+        bodySegments.Insert(0, seg.GetComponent<BodyController>());
     }
 
-    public TileDirectionChanger GetTopTile(int currTileNumber)
+    public void EnableInput()
     {
-        for (int i = 0; i < allTiles.Length; i++)
-        {
-            if (allTiles[i].tileNumber == currTileNumber - 9) return allTiles[i];
-        }
-        return null;
+        canInput = true;
     }
 
-    public TileDirectionChanger GetBottomTile(int currTileNumber)
-    {
-        for (int i = 0; i < allTiles.Length; i++)
-        {
-            if (allTiles[i].tileNumber == currTileNumber + 9) return allTiles[i];
-        }
-        return null;
-    }
 
-    public TileDirectionChanger GetLeftTile(int currTileNumber)
-    {
-        for (int i = 0; i < allTiles.Length; i++)
-        {
-            if (allTiles[i].tileNumber == currTileNumber - 1) return allTiles[i];
-        }
-        return null;
-    }
-
-    public TileDirectionChanger GetRightTile(int currTileNumber)
-    {
-        for (int i = 0; i < allTiles.Length; i++)
-        {
-            if (allTiles[i].tileNumber == currTileNumber + 1) return allTiles[i];
-        }
-        return null;
-    }
 }
